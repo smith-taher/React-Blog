@@ -11,6 +11,9 @@ let allBlogs = [
     { id: '2', title: "Goodbye World", body: "More Stuff", isBeingEdited: false },
 ];
 
+let blogBeingEdited = null;
+let updatedBlog = null;
+
 let removeBlog = (blogToDelete) => {
     let { id } = blogToDelete;
     allBlogs = allBlogs.filter((blog) => id !== blog.id);
@@ -19,8 +22,7 @@ let removeBlog = (blogToDelete) => {
 };
 
 let editBlog = (blogToEdit) => {
-    let blog = allBlogs.find(blog => blog.id === blogToEdit.id);
-    blog.isBeingEdited = !blog.isBeingEdited;
+    blogBeingEdited = Object.assign({}, blogToEdit);
     console.log('I would like to edit ' + blogToEdit.id);
     update();
 };
@@ -30,18 +32,25 @@ let editBlog = (blogToEdit) => {
 // }
 
 let updateTitle = (blogToEdit, title) => {
-    let blog = allBlogs.find(blog => blog.id === blogToEdit.id);
-    blog.title = title;
+    // let blog = allBlogs.find(blog => blog.id === blogToEdit.id);
+    blogToEdit.title = title;
     console.log('I would like to edit ' + blogToEdit.id);
     update();
 };
 
 let updateBody = (blogToEdit, body) => {
-    let blog = allBlogs.find(blog => blog.id === blogToEdit.id);
-    blog.body = body;
+    // let blog = allBlogs.find(blog => blog.id === blogToEdit.id);
+    blogToEdit.body = body;
     console.log('I would like to edit ' + blogToEdit.id);
     update();
 };
+
+let saveBlog = (blogToEdit) => {
+    let blog = allBlogs.find(blog => blog.id === blogToEdit.id);
+    Object.assign(blog, blogToEdit);
+    blogBeingEdited = null;
+    update();
+}
 
 let DeleteBlogButton = (blog) =>
     h('button', { 
@@ -63,8 +72,9 @@ let AddBlogButton = (blog) =>
 
 let EditBlogForm = (blog) =>
     h('form', null, [
-        h('input', { value: blog.title, onChange: (event) => updateTitle(blog, event.target.value) }),
-        h('input', { value: blog.body, onChange: (event) => updateBody(blog, event.target.value) }),
+        h('input', { value: blogBeingEdited.title, onChange: (event) => updateTitle(blogBeingEdited, event.target.value) }),
+        h('input', { value: blogBeingEdited.body, onChange: (event) => updateBody(blogBeingEdited, event.target.value) }),
+        h('button', { onClick: () => saveBlog(blogBeingEdited) }, 'Save'),
     ]);
 
 // let AddBlogForm = (blog) =>
@@ -78,8 +88,7 @@ let BlogRow = (blog) =>
         h('h6', null, blog.title),
         h(DeleteBlogButton, blog),
         h(EditBlogButton, blog),
-        h(AddBlogButton, blog),
-        blog.isBeingEdited && h(EditBlogForm, blog),
+        blogBeingEdited && blog.id === blogBeingEdited.id && h(EditBlogForm, blog),
         h('p', null, blog.body),
     ]);
 // ReactDOM.render(h(BlogRow, allBlogs[0]), root);
@@ -95,6 +104,7 @@ let Page = ( { blogs }) => h('div', null, [
     h(Greeting, { person: 'Joel' }, []),
     h(BlogList, { blogs }),
     h(Footer),
+    // h(AddBlogButton, blog),
 ]);
 // ReactDOM.render(h(Page, { blogs: allBlogs }, []), root);
 
