@@ -2,8 +2,8 @@ const root = document.querySelector('.react-root');
 const h = React.createElement;
 // h requires component or function and the data being passed in
 
-let Greeting = ({ person }) => h('h1', { className: 'greeting' }, `${person}`);
-let Title = () => h('h4', null, 'React');
+let Greeting = ({ person }) => h('h3', { className: 'greeting' }, `Greetings ${person}`);
+let Title = () => h('h1', null, 'React');
 let Footer = () => h('footer', null, 'Copyright 2018');
 
 let allBlogs = [
@@ -13,6 +13,7 @@ let allBlogs = [
 
 let blogBeingEdited = null;
 let updatedBlog = null;
+// let addingBlog = null;
 
 let removeBlog = (blogToDelete) => {
     let { id } = blogToDelete;
@@ -84,12 +85,12 @@ let EditBlogForm = (blog) =>
 //     ])
 
 let BlogRow = (blog) => 
-    h('div', null, [
+    h('div', { className: 'blog-row' }, [
         h('h6', null, blog.title),
+        h('p', null, blog.body),
         h(DeleteBlogButton, blog),
         h(EditBlogButton, blog),
         blogBeingEdited && blog.id === blogBeingEdited.id && h(EditBlogForm, blog),
-        h('p', null, blog.body),
     ]);
 // ReactDOM.render(h(BlogRow, allBlogs[0]), root);
 
@@ -103,8 +104,8 @@ let Page = ( { blogs }) => h('div', null, [
     Title(),
     h(Greeting, { person: 'Joel' }, []),
     h(BlogList, { blogs }),
+    h(AddBlogButton),
     h(Footer),
-    // h(AddBlogButton, blog),
 ]);
 // ReactDOM.render(h(Page, { blogs: allBlogs }, []), root);
 
