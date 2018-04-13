@@ -84,7 +84,7 @@ let EditBlogForm = (blog) =>
 //         h('input', { value: blog.body }),
 //     ])
 
-let BlogRow = (blog) => 
+let BlogRow = ({ blog }) => 
     h('div', { className: 'blog-row' }, [
         h('h6', null, blog.title),
         h('p', null, blog.body),
@@ -96,17 +96,18 @@ let BlogRow = (blog) =>
 
 let BlogList = ({ blogs }) => 
     h('div', { className: 'blog-list' },
-        allBlogs.map(blog => h(BlogRow, blog))
+        allBlogs.map(blog => <BlogRow blog={blog} />)
     );
 // ReactDOM.render(h(BlogList, BlogRow), root);
 
-let Page = ( { blogs }) => h('div', null, [
-    Title(),
-    h(Greeting, { person: 'Joel' }, []),
-    h(BlogList, { blogs }),
-    h(AddBlogButton),
-    h(Footer),
-]);
+let Page = ( { blogs }) =>
+    <div>
+        <Title />
+        <Greeting person="Joel" />
+        <BlogList blogs={blogs} />
+        <AddBlogButton />
+        <Footer />
+    </div>
 // ReactDOM.render(h(Page, { blogs: allBlogs }, []), root);
 
 let update = () => {

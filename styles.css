@@ -1,5 +1,5 @@
 .big-red {
-    background-color: #4CAF50; /* Green */
+    background-color: gray; /* Green */
     border: none;
     color: white;
     padding: 15px 15px;
@@ -12,6 +12,8 @@
 }
 
 .blog-row {
-    border: 12px solid black;
+    border: 12px solid gray;
     margin: 12px;
+    text-align: center;
+    background-color: orange;
 }
