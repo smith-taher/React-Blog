@@ -1,5 +1,18 @@
 .big-red {
-    background-color: gray; /* Green */
+    background-color: gray;
+    border: none;
+    color: white;
+    padding: 15px 15px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    border-radius: 12px;
+    margin: 12px;
+}
+
+.stop {
+    background-color: red;
     border: none;
     color: white;
     padding: 15px 15px;
@@ -16,4 +29,5 @@
     margin: 12px;
     text-align: center;
     background-color: orange;
+    padding-bottom: 20px;
 }
