@@ -29,6 +29,9 @@ let EditBlogForm = ({ blog, blogBeingEdited, updateTitle, updateBody, saveBlog }
 let BlogRow = ({ blog, blogBeingEdited, removeBlog, editBlog, updateTitle, updateBody, saveBlog }) =>
     <div className='blog-row'>
         <h1>{blog.title}</h1>
+        <p>{blog.body}</p>
+        <DeleteBlogButton blog={blog} removeBlog={removeBlog} />
+        <EditBlogButton blog={blog} editBlog={editBlog} />
         {
             blogBeingEdited && blog.id === blogBeingEdited.id &&
                 <EditBlogForm
@@ -39,9 +42,6 @@ let BlogRow = ({ blog, blogBeingEdited, removeBlog, editBlog, updateTitle, updat
                     saveBlog={saveBlog}
                 />
         }
-        <p>{blog.body}</p>
-        <DeleteBlogButton blog={blog} removeBlog={removeBlog} />
-        <EditBlogButton blog={blog} editBlog={editBlog} />
     </div>
 
 let BlogList = ({
@@ -129,7 +129,7 @@ class BlogListPage extends React.Component {
             <div>
                 <Title />
                 <Greeting person="Jonathan" />
-                <button onClick={refresh}>Refresh</button>
+                <button className="big-red" onClick={refresh}>Refresh</button>
                 <BlogList
                     blogs={blogs}
                     blogBeingEdited={blogBeingEdited}
@@ -139,10 +139,12 @@ class BlogListPage extends React.Component {
                     updateBody={updateBody}
                     saveBlog={saveBlog}
                 />
+                <Footer />
             </div>
         )
     }
 }
 
 ReactDOM.render(<BlogListPage />, root);
+
 
