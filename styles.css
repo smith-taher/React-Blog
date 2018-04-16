@@ -11,19 +11,6 @@
     margin: 12px;
 }
 
-.stop {
-    background-color: red;
-    border: none;
-    color: white;
-    padding: 15px 15px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    border-radius: 12px;
-    margin: 12px;
-}
-
 .blog-row {
     border: 12px solid gray;
     margin: 12px;

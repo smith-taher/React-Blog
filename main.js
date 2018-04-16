@@ -1,116 +1,148 @@
 const root = document.querySelector('.react-root');
-const h = React.createElement;
-// h requires component or function and the data being passed in
 
-let Greeting = ({ person }) => h('h3', { className: 'greeting' }, `Greetings ${person}`);
-let Title = () => h('h1', null, 'React');
-let Footer = () => h('footer', null, 'Copyright 2018');
+let Greeting = ({ person }) =>
+    <h1 className="greeting">Hello {person}!</h1>
+let Title = () => <h1>React</h1>
+let Footer = () => <footer>Copyright 2018</footer>
 
-let allBlogs = [
-    { id: '1', title: "Hello World", body: "Lora Ipsum", isBeingEdited: false },
-    { id: '2', title: "Goodbye World", body: "More Stuff", isBeingEdited: false },
-];
+let DeleteBlogButton = ({ blog, removeBlog }) =>
+    <button
+        className="big-red"
+        onClick={() => removeBlog(blog)}
+    >Remove Blog
+    </button>
 
-let blogBeingEdited = null;
-let updatedBlog = null;
-// let addingBlog = null;
+let EditBlogButton = ({ blog, editBlog }) =>
+    <button
+        className="big-red"
+        onClick={() => editBlog(blog)}
+    >Edit Blog
+    </button>
 
-let removeBlog = (blogToDelete) => {
-    let { id } = blogToDelete;
-    allBlogs = allBlogs.filter((blog) => id !== blog.id);
-    console.log('I would like to delete ' + id);
-    update();
-};
+let EditBlogForm = ({ blog, blogBeingEdited, updateTitle, updateBody, saveBlog }) =>
+    <form>
+        <input key="1" value={blogBeingEdited.title} onChange={(event) => updateTitle(blogBeingEdited, event.target.value)} />
+        <input key="2" value={blogBeingEdited.body} onChange={(event) => updateBody(blogBeingEdited, event.target.value) } />
+        <button key="3" onClick={() => saveBlog(blogBeingEdited) }>Save</button>
+    </form>
 
-let editBlog = (blogToEdit) => {
-    blogBeingEdited = Object.assign({}, blogToEdit);
-    console.log('I would like to edit ' + blogToEdit.id);
-    update();
-};
-
-// let addTitle = (blotToAdd) => {
-//     let blog = allBlogs
-// }
-
-let updateTitle = (blogToEdit, title) => {
-    // let blog = allBlogs.find(blog => blog.id === blogToEdit.id);
-    blogToEdit.title = title;
-    console.log('I would like to edit ' + blogToEdit.id);
-    update();
-};
-
-let updateBody = (blogToEdit, body) => {
-    // let blog = allBlogs.find(blog => blog.id === blogToEdit.id);
-    blogToEdit.body = body;
-    console.log('I would like to edit ' + blogToEdit.id);
-    update();
-};
-
-let saveBlog = (blogToEdit) => {
-    let blog = allBlogs.find(blog => blog.id === blogToEdit.id);
-    Object.assign(blog, blogToEdit);
-    blogBeingEdited = null;
-    update();
-}
-
-let DeleteBlogButton = (blog) =>
-    h('button', { 
-        className: 'big-red',
-        onClick: () => removeBlog(blog)
-    }, 'Remove Blog');
-
-let EditBlogButton = (blog) =>
-    h('button', { 
-        className: 'big-red',
-        onClick: () => editBlog(blog)
-    }, 'Edit Blog');
-
-let AddBlogButton = (blog) =>
-    h('button', { 
-        className: 'big-red',
-        onClick: () => addBlog(blog)
-    }, 'Add Blog');
-
-let EditBlogForm = (blog) =>
-    h('form', null, [
-        h('input', { value: blogBeingEdited.title, onChange: (event) => updateTitle(blogBeingEdited, event.target.value) }),
-        h('input', { value: blogBeingEdited.body, onChange: (event) => updateBody(blogBeingEdited, event.target.value) }),
-        h('button', { onClick: () => saveBlog(blogBeingEdited) }, 'Save'),
-    ]);
-
-// let AddBlogForm = (blog) =>
-//     h('form', null, [
-//         h('input', { value: blog.title }),
-//         h('input', { value: blog.body }),
-//     ])
-
-let BlogRow = ({ blog }) => 
-    h('div', { className: 'blog-row' }, [
-        h('h6', null, blog.title),
-        h('p', null, blog.body),
-        h(DeleteBlogButton, blog),
-        h(EditBlogButton, blog),
-        blogBeingEdited && blog.id === blogBeingEdited.id && h(EditBlogForm, blog),
-    ]);
-// ReactDOM.render(h(BlogRow, allBlogs[0]), root);
-
-let BlogList = ({ blogs }) => 
-    h('div', { className: 'blog-list' },
-        allBlogs.map(blog => <BlogRow blog={blog} />)
-    );
-// ReactDOM.render(h(BlogList, BlogRow), root);
-
-let Page = ( { blogs }) =>
-    <div>
-        <Title />
-        <Greeting person="Joel" />
-        <BlogList blogs={blogs} />
-        <AddBlogButton />
-        <Footer />
+let BlogRow = ({ blog, blogBeingEdited, removeBlog, editBlog, updateTitle, updateBody, saveBlog }) =>
+    <div className='blog-row'>
+        <h1>{blog.title}</h1>
+        {
+            blogBeingEdited && blog.id === blogBeingEdited.id &&
+                <EditBlogForm
+                    blog={blog}
+                    blogBeingEdited={blogBeingEdited}
+                    updateTitle={updateTitle}
+                    updateBody={updateBody}
+                    saveBlog={saveBlog}
+                />
+        }
+        <p>{blog.body}</p>
+        <DeleteBlogButton blog={blog} removeBlog={removeBlog} />
+        <EditBlogButton blog={blog} editBlog={editBlog} />
     </div>
-// ReactDOM.render(h(Page, { blogs: allBlogs }, []), root);
 
-let update = () => {
-    ReactDOM.render(h(Page, { blogs: allBlogs }, []), root);
+let BlogList = ({
+    blogs,
+    blogBeingEdited,
+    removeBlog,
+    editBlog,
+    updateTitle,
+    updateBody,
+    saveBlog
+}) =>
+    <div className="blog-list">
+        {
+            blogs.map(blog => <BlogRow key={blog.id} blog={blog} blogBeingEdited={blogBeingEdited} removeBlog={removeBlog} editBlog={editBlog} updateTitle={updateTitle} updateBody={updateBody} saveBlog={saveBlog} />)
+        }
+    </div>
+
+class BlogListPage extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            blogs: [],
+            blogBeingEdited: null
+        };
+    }
+
+    componentDidMount() {
+        this.fetchData();
+    }
+
+    fetchData() {
+        fetch('https://jsonplaceholder.typicode.com/posts')
+            .then(res => res.json())
+            .then(blogs => {
+                this.setState({ blogs })
+            })
+    }
+
+    render() {
+        // let blogs = this.state.blogs;
+        // let blogBeingEdited = this.state.blogBeingEdited;
+        let { blogs, blogBeingEdited } = this.state;
+
+        let removeBlog = (blogToDelete) => {
+            let { id } = blogToDelete;
+            let prunedBlogs = this.state.blogs.filter((blog) => id !== blog.id);
+            this.setState({
+                blogs: prunedBlogs
+            });
+        };
+
+        let editBlog = (blogToEdit) => {
+            this.setState({
+                blogBeingEdited: Object.assign({}, blogToEdit)
+            });
+        };
+
+        let updateTitle = (blogToEdit, title) => {
+            this.setState({
+                blogBeingEdited: Object.assign({}, blogToEdit, { title })
+            });
+        };
+
+        let updateBody = (blogToEdit, body) => {
+            this.setState({
+                blogBeingEdited: Object.assign({}, blogToEdit, { body })
+            });
+        };
+
+        let saveBlog = (blogToEdit) => {
+            let blogs = this.state.blogs.slice();
+            let blog = blogs.find(blog => blog.id === blogToEdit.id);
+            Object.assign(blog, blogToEdit);
+            this.setState({
+                blogs,
+                blogBeingEdited: null
+            });
+        };
+
+        let refresh = () => {
+            this.fetchData();
+        }
+
+        return (
+            <div>
+                <Title />
+                <Greeting person="Jonathan" />
+                <button onClick={refresh}>Refresh</button>
+                <BlogList
+                    blogs={blogs}
+                    blogBeingEdited={blogBeingEdited}
+                    removeBlog={removeBlog}
+                    editBlog={editBlog}
+                    updateTitle={updateTitle}
+                    updateBody={updateBody}
+                    saveBlog={saveBlog}
+                />
+            </div>
+        )
+    }
 }
-update();
+
+ReactDOM.render(<BlogListPage />, root);
+
