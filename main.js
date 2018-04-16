@@ -128,7 +128,7 @@ class BlogListPage extends React.Component {
         return (
             <div>
                 <Title />
-                <Greeting person="Jonathan" />
+                <Greeting person="Joel" />
                 <button className="big-red" onClick={refresh}>Refresh</button>
                 <BlogList
                     blogs={blogs}
